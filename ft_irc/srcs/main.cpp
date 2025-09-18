@@ -10,11 +10,76 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "Utils.hpp"
+
 int	main(int ac, char **av)
 {
-	
+	if (ac != 3)
+	{
+		std::cerr << "Error: Bad arguments, should enter => ./prog <port> <password>" << std::endl;
+		return (1);
+	}
 	return (0);
 }
+
+// main.cpp
+// Rôle : Point d'entrée du programme serveur IRC
+// Fonction :
+// Validation des arguments (port et mot de passe)
+// Initialisation et lancement du serveur
+// Gestion de la boucle principale du serveur
+// Contient déjà les commentaires sur les fonctions réseau nécessaires (socket, bind, listen, accept, etc.)
+
+// Server.cpp
+// Rôle : Gestion du serveur IRC principal
+// Fonction :
+// Création et configuration des sockets
+// Écoute des connexions entrantes
+// Gestion de la boucle d'événements (probablement avec poll() ou select())
+// Gestion des clients connectés
+// Coordination entre les différents composants
+
+// Client.cpp
+// Rôle : Représentation et gestion des clients connectés
+// Fonction :
+// Stockage des informations client (nickname, username, channels rejoints, etc.)
+// Gestion de l'authentification
+// Envoi/réception de messages vers/depuis les clients
+// Gestion de l'état des clients (connecté, authentifié, etc.)
+
+// Channel.cpp
+// Rôle : Gestion des canaux IRC
+// Fonction :
+// Création et suppression de canaux
+// Gestion des membres du canal
+// Gestion des permissions (opérateurs, modes du canal)
+// Distribution des messages dans les canaux
+// Gestion des modes de canal (+t, +i, +k, +o, +l)
+
+// CommandHandler.cpp
+// Rôle : Traitement des commandes IRC
+// Fonction :
+// Parsing des commandes IRC reçues des clients
+// Implémentation des commandes IRC obligatoires : PASS, NICK, USER, JOIN, PART, PRIVMSG, KICK, INVITE, TOPIC, MODE
+// Validation des paramètres des commandes
+// Dispatch des commandes vers les bonnes méthodes
+
+// Messages.cpp
+// Rôle : Gestion des messages et réponses IRC
+// Fonction :
+// Définition des codes de réponse IRC numériques (001, 002, 403, 404, etc.)
+// Formatage des messages de réponse selon le protocole IRC
+// Messages d'erreur standardisés
+// Messages de confirmation et d'information
+
+// Utils.cpp
+// Rôle : Fonctions utilitaires
+// Fonction :
+// Fonctions de parsing de chaînes
+// Validation de formats (nicknames, noms de canaux)
+// Fonctions de conversion et de formatage
+// Utilitaires réseau et manipulation de données
+
 
 // socket : crée un point de communication réseau (socket).
 
