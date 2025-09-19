@@ -6,21 +6,81 @@
 /*   By: pgrellie <pgrellie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 17:17:45 by pgrellie          #+#    #+#             */
-/*   Updated: 2025/09/17 17:29:02 by pgrellie         ###   ########.fr       */
+/*   Updated: 2025/09/19 18:11:18 by pgrellie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Utils.hpp"
+#include "Server.hpp"
+#include <signal.h>
+
+Server	*g_server = NULL;
+
+void signalHandler(int sig)
+{
+	(void)sig;
+	std::cout << "\nShutting down server..." << std::endl;
+	if (g_server)
+		g_server->stop();
+	exit(0);
+}
 
 int	main(int ac, char **av)
 {
 	if (ac != 3)
 	{
-		std::cerr << "Error: Bad arguments, should enter => ./prog <port> <password>" << std::endl;
+		std::cerr << "Error: Bad arguments, should enter => ./ircserv <port> <password>" << std::endl;
 		return (1);
 	}
+	
+	// Conversion et validation du port
+	int port = std::atoi(av[1]);
+	if (port < 1024 || port > 65535)
+	{
+		std::cerr << "Error: Port must be between 1024 and 65535" << std::endl;
+		return (1);
+	}
+	
+	// Gestion des signaux
+	signal(SIGINT, signalHandler);  // Ctrl+C
+	signal(SIGTERM, signalHandler); // Termination
+	
+	try
+	{
+		// Création du serveur
+		Server server(port, av[2]);
+		g_server = &server;
+		
+		// // Démarrage du serveur
+		server.start();
+		
+		// Boucle principale simple - accepte un client et traite ses messages
+		server.acceptClient();
+		
+		// Boucle de gestion des messages
+		while (true)
+		{
+			server.handleMessage();
+		}
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << "Server error: " << e.what() << std::endl;
+		return (1);
+	}
+	
 	return (0);
 }
+
+// Une socket est un point de communication réseau qui permet à deux programmes de communiquer, que ce soit sur la même machine ou à travers un réseau.
+
+// 🔌 Analogie simple :
+// Imaginez une prise électrique dans le mur :
+
+// La socket = la prise
+// Votre programme = l'appareil que vous branchez
+// Le réseau = le système électrique
+// Les données = l'électricité qui circule
+
 
 // main.cpp
 // Rôle : Point d'entrée du programme serveur IRC
