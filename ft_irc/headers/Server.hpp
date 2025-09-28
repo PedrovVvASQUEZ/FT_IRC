@@ -26,10 +26,10 @@ class Server
 {
 	private:
 		// Configuration de base
-		int				_port;
-		std::string		_password;
-		int				_server_fd;
-		int				_client_fd;
+		int					_port;
+		std::string			_password;
+		int					_server_fd;
+		int					_client_fd;
 		struct sockaddr_in	_server_addr;
 
 		// Méthodes privées - étapes de setup

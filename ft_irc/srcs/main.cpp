@@ -73,6 +73,8 @@ int	main(int ac, char **av)
 
 // Une socket est un point de communication réseau qui permet à deux programmes de communiquer, que ce soit sur la même machine ou à travers un réseau.
 
+// Le format réseau universel est le big-endian pour l'adresse IP et les ports
+
 // 🔌 Analogie simple :
 // Imaginez une prise électrique dans le mur :
 

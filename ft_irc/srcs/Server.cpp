@@ -77,7 +77,6 @@ void	Server::_createSocket()
 		std::cerr << "Error: Failed to create socket" << std::endl;
 		exit(1);
 	}
-	
 	// Option pour réutiliser l'adresse
 	int opt = 1;
 	if (setsockopt(_server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) < 0)
@@ -94,7 +93,7 @@ void	Server::_bindSocket()
 	_server_addr.sin_family = AF_INET;
 	_server_addr.sin_addr.s_addr = INADDR_ANY; // Écoute sur toutes les interfaces
 	_server_addr.sin_port = htons(_port);
-	
+
 	if (bind(_server_fd, (struct sockaddr*)&_server_addr, sizeof(_server_addr)) < 0)
 	{
 		std::cerr << "Error: Failed to bind socket to port " << _port << std::endl;
@@ -130,7 +129,7 @@ void	Server::acceptClient()
 {
 	struct sockaddr_in client_addr;
 	socklen_t client_len = sizeof(client_addr);
-	
+
 	_client_fd = accept(_server_fd, (struct sockaddr*)&client_addr, &client_len);
 	std::cout << "Client FD: " << _client_fd << std::endl;
 	if (_client_fd < 0)
@@ -145,7 +144,7 @@ void	Server::handleMessage()
 {
 	char buffer[512];
 	std::memset(buffer, 0, 512);
-	
+
 	ssize_t bytes_received = recv(_client_fd, buffer, 511, 0);
 	if (bytes_received <= 0)
 	{
@@ -169,7 +168,6 @@ void	Server::sendMessage(const std::string& message)
 		std::cerr << "No client connected" << std::endl;
 		return;
 	}
-	
 	std::string full_message = message + "\r\n";
 	ssize_t bytes_sent = send(_client_fd, full_message.c_str(), full_message.length(), 0);
 	if (bytes_sent < 0)

@@ -43,7 +43,7 @@ clean:
 	@echo "🧹 Object files cleaned"
 
 fclean: clean
-	rm -f $(NAME)
+	rm -rf $(NAME)
 	@echo "🧹 Executable cleaned"
 
 re: fclean all
