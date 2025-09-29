@@ -54,7 +54,7 @@ Server	&Server::operator=(const Server &rhs)
 	return (*this);
 }
 
-//==================== Getters ===================//
+//==================== Getters  ===================//
 
 int	Server::getPort() const
 {
@@ -140,7 +140,7 @@ void	Server::acceptClient()
 	std::cout << "Client connected! File descriptor: " << _client_fd << std::endl;
 }
 
-void	Server::handleMessage()
+void	Server::handleClientMessage()
 {
 	char buffer[512];
 	std::memset(buffer, 0, 512);

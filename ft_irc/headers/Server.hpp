@@ -21,23 +21,36 @@
 # include <string>
 # include <cstring>
 # include <cstdlib>
+# include <vector>
+# include <map>
+# include <algorithm>
+# include <poll.h>
+# include "Clients.hpp"
 
-class Server
+# define MAX_CLIENTS 100
+
+class	Server
 {
 	private:
 		// Configuration de base
-		int					_port;
-		std::string			_password;
-		int					_server_fd;
-		int					_client_fd;
-		struct sockaddr_in	_server_addr;
+		int							_port;
+		std::string					_password;
+		int							_server_fd;
+		struct sockaddr_in			_server_addr;
+		std::vector<struct pollfd>	_pfds;
+		std::map<int, Clients>		_clients;
 
 		// Méthodes privées - étapes de setup
-		void	_createSocket();
-		void	_bindSocket();
-		void	_listenSocket();
+		void	_createSocket(void);
+		void	_bindSocket(void);
+		void	_listenSocket(void);
 
-	public:
+		void	acceptClient(void);	// Accept UNE connexion
+		void	handleClientMessage(int client_fd);	// Lit et traite UN message
+		void	_removeClient(int client_fd);
+		void	_processMessage(Clients &Client, const std::string &message);
+
+		public:
 		// Constructeurs / Destructeur
 		Server(void);
 		Server(int port, const std::string &password);
@@ -48,15 +61,18 @@ class Server
 		Server	&operator=(const Server &rhs);
 
 		// Getters de base
-		int		getPort() const;
-		std::string	getPassword() const;
+		int			getPort(void) const;
+		std::string	getPassword(void) const;
+		bool		isRunning(void) const;
+		Clients		*getClient(int fd);
+		void		removeClient(int fd);
 
 		// Méthodes principales - version simple
-		void	start();		// Setup complet du serveur
-		void	acceptClient();	// Accept UNE connexion
-		void	handleMessage();	// Lit et traite UN message
-		void	sendMessage(const std::string& message);	// Envoie UN message
-		void	stop();			// Ferme les connexions
+		void	start(void);		// Setup complet du serveur
+		void	run(void);
+		void	sendMessage(int client_fd, const std::string& message);	// Envoie UN message
+		void	brodcastMessage(const std::string &message);
+		void	stop(void);			// Ferme les connexions
 		
 };
 
