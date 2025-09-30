@@ -19,11 +19,16 @@ SRCS_DIR = srcs
 HEADER_DIR = headers
 OBJS_DIR = objs
 
-SOURCES = main.cpp Server.cpp
+SOURCES = main.cpp\
+			Server.cpp\
+			Clients.cpp\
+
 SRCS = $(addprefix $(SRCS_DIR)/, $(SOURCES))
 OBJS = $(SRCS:$(SRCS_DIR)/%.cpp=$(OBJS_DIR)/%.o)
 
-HEADERS = Server.hpp
+HEADERS = Server.hpp\
+			Clients.hpp\
+
 HDRS = $(addprefix $(HEADER_DIR)/, $(HEADERS))
 
 all: $(NAME)

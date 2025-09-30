@@ -16,13 +16,14 @@
 # include <string>
 # include <sys/socket.h>
 # include <netinet/in.h>
+# include <unistd.h>
 
 enum	ClientState
 {
 	DISCONNECTED,
 	CONNECTED,
-	ATHENTIFICATED
-}
+	AUTHENTIFICATED
+};
 
 class	Clients
 {
@@ -55,14 +56,14 @@ class	Clients
 		const std::string&	getBuffer(void) const;
 
 		// Setters
-		void	setNickname(const std::string& nickname);
-		void	setUsername(const std::string& username);
-		void	setRealname(const std::string& realname);
+		void	setNickname(const std::string &nickname);
+		void	setUsername(const std::string &username);
+		void	setRealname(const std::string &realname);
 		void	setState(ClientState state);
-		void	appendToBuffer(const std::string& data);
+		void	appendToBuffer(const std::string &data);
 		void	clearBuffer(void);
 
-		// Méthodes utilitaires
+		// Fonction Publiques
 		bool	isAuthenticated(void) const;
 		bool	isConnected(void) const;
 		void	disconnect(void);

@@ -24,9 +24,9 @@ Clients::Clients(int fd, const std::string &hostname) : _cfd(fd), _hostname(host
 	return ;
 }
 
-Clients::Clients(const Clients &rhs) : _cfd(rhs._cfd), _hostname(rhs._hostname),
-										_nickname(rhs._nickname), _username(rhs._username),
-										_realname(rhs._realname), _cstate(rhs._cstate),
+Clients::Clients(const Clients &rhs) : _cfd(rhs._cfd), _nickname(rhs._nickname),
+										_username(rhs._username), _realname(rhs._realname),
+										_hostname(rhs._hostname), _cstate(rhs._cstate),
 										_buffer(rhs._buffer)
 {
 	return ;
@@ -55,13 +55,93 @@ Clients	&Clients::operator=(const Clients &rhs)
 	return (*this);
 }
 
-//==================== Getters N Setters ===================//
+//==================== Getters ===================//
 
+int	Clients::getFd(void) const
+{
+	return (this->_cfd);
+}
 
+ClientState	Clients::getState(void) const
+{
+	return (this->_cstate);
+}
 
-//==================== Méthodes privées setup ===================//
+const std::string	&Clients::getHostname(void) const
+{
+	return (this->_hostname);
+}
 
+const std::string	&Clients::getNickname(void) const
+{
+	return (this->_nickname);
+}
 
+const std::string	&Clients::getUsername(void) const
+{
+	return (this->_username);
+}
 
-//==================== Méthodes publiques principales ===================//
+const std::string	&Clients::getRealname(void) const
+{
+	return (this->_realname);
+}
 
+const std::string	&Clients::getBuffer(void) const
+{
+	return (this->_buffer);
+}
+
+//==================== Setters ===================//
+
+void	Clients::setNickname(const std::string &nickname)
+{
+	_nickname = nickname;
+}
+
+void	Clients::setUsername(const std::string &username)
+{
+	_username = username;
+}
+
+void	Clients::setRealname(const std::string &realname)
+{
+	_realname = realname;
+}
+
+void	Clients::setState(ClientState state)
+{
+	_cstate = state;
+}
+
+void	Clients::appendToBuffer(const std::string &data)
+{
+	_buffer += data;
+}
+
+void	Clients::clearBuffer(void)
+{
+	_buffer.clear();
+}
+
+//==================== Fonctions publics ===================//
+
+bool	Clients::isAuthenticated(void) const
+{
+	return (this->_cstate == AUTHENTIFICATED);
+}
+
+bool	Clients::isConnected(void) const
+{
+	return (this->_cstate == CONNECTED);
+}
+
+void	Clients::disconnect(void)
+{
+	if (_cfd != -1)
+	{
+		close(_cfd);
+		_cfd = -1;
+	}
+	_cstate = DISCONNECTED;
+}

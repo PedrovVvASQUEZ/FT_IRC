@@ -16,6 +16,7 @@
 // Includes essentiels pour un serveur simple
 # include <sys/socket.h>
 # include <netinet/in.h>
+# include <arpa/inet.h>
 # include <unistd.h>
 # include <iostream>
 # include <string>
@@ -37,6 +38,7 @@ class	Server
 		std::string					_password;
 		int							_server_fd;
 		struct sockaddr_in			_server_addr;
+		bool						_running;
 		std::vector<struct pollfd>	_pfds;
 		std::map<int, Clients>		_clients;
 
@@ -45,9 +47,9 @@ class	Server
 		void	_bindSocket(void);
 		void	_listenSocket(void);
 
-		void	acceptClient(void);	// Accept UNE connexion
-		void	handleClientMessage(int client_fd);	// Lit et traite UN message
-		void	_removeClient(int client_fd);
+		void	_acceptNewClient(void);	// Accept UNE connexion
+		void	_handleClientMessage(int client_fd);	// Lit et traite UN message
+		void	_clientRemover(int client_fd);
 		void	_processMessage(Clients &Client, const std::string &message);
 
 		public:
@@ -61,17 +63,19 @@ class	Server
 		Server	&operator=(const Server &rhs);
 
 		// Getters de base
+		int			getServerFd(void) const;
 		int			getPort(void) const;
 		std::string	getPassword(void) const;
 		bool		isRunning(void) const;
 		Clients		*getClient(int fd);
 		void		removeClient(int fd);
+		size_t		getClientCount(void) const;
 
 		// Méthodes principales - version simple
 		void	start(void);		// Setup complet du serveur
 		void	run(void);
 		void	sendMessage(int client_fd, const std::string& message);	// Envoie UN message
-		void	brodcastMessage(const std::string &message);
+		void	broadcastMessage(const std::string &message);
 		void	stop(void);			// Ferme les connexions
 		
 };

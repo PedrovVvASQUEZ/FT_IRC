@@ -15,59 +15,30 @@
 
 Server	*g_server = NULL;
 
-void signalHandler(int sig)
+void signalHandler(int signal)
 {
-	(void)sig;
-	std::cout << "\nShutting down server..." << std::endl;
-	if (g_server)
+	if (signal == SIGINT && g_server)
+	{
+		std::cout << "\nShutting down server..." << std::endl;
 		g_server->stop();
-	exit(0);
+	}
 }
 
-int	main(int ac, char **av)
+int main(int argc, char* argv[])
 {
-	if (ac != 3)
+	if (argc != 3)
 	{
-		std::cerr << "Error: Bad arguments, should enter => ./ircserv <port> <password>" << std::endl;
-		return (1);
+		std::cerr << "Usage: " << argv[0] << " <port> <password>" << std::endl;
+		return 1;
 	}
-	
-	// Conversion et validation du port
-	int port = std::atoi(av[1]);
-	if (port < 1024 || port > 65535)
-	{
-		std::cerr << "Error: Port must be between 1024 and 65535" << std::endl;
-		return (1);
-	}
-	
-	// Gestion des signaux
-	signal(SIGINT, signalHandler);  // Ctrl+C
-	signal(SIGTERM, signalHandler); // Termination
-	
-	try
-	{
-		// Création du serveur
-		Server server(port, av[2]);
-		g_server = &server;
-		
-		// // Démarrage du serveur
-		server.start();
-		
-		// Boucle principale simple - accepte un client et traite ses messages
-		server.acceptClient();
-		
-		// Boucle de gestion des messages
-		while (true)
-		{
-			server.handleMessage();
-		}
-	}
-	catch (const std::exception& e)
-	{
-		std::cerr << "Server error: " << e.what() << std::endl;
-		return (1);
-	}
-	
+	int port = std::atoi(argv[1]);
+	std::string password = argv[2];
+	Server server(port, password);
+	g_server = &server;
+	// Gérer Ctrl+C proprement
+	signal(SIGINT, signalHandler);
+	server.start();
+	server.run();
 	return (0);
 }
 
