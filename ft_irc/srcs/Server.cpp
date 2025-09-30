@@ -291,6 +291,7 @@ void Server::run(void)
 {
 	while (_running)
 	{
+
 		int poll_result = poll(_pfds.data(), _pfds.size(), -1);
 		
 		if (poll_result < 0)
