@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.hpp                                         :+:      :+:    :+:   */
+/*   Clients.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pgrellie <pgrellie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:11:13 by pgrellie          #+#    #+#             */
-/*   Updated: 2025/09/17 18:11:14 by pgrellie         ###   ########.fr       */
+/*   Updated: 2025/10/01 18:45:16 by pgrellie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,11 @@ class	Clients
 		std::string	_buffer;
 
 	public:
-		// Constructeurs / Destructeur
 		Clients(void);
 		Clients(int fd, const std::string& hostname);
 		Clients(const Clients &rhs);
 		~Clients(void);
 
-		// Opérateur d'assignation
 		Clients& operator=(const Clients &rhs);
 
 		// Getters
@@ -54,6 +52,7 @@ class	Clients
 		const std::string&	getHostname(void) const;
 		ClientState			getState(void) const;
 		const std::string&	getBuffer(void) const;
+		std::string&		getBuffer(void);
 
 		// Setters
 		void	setNickname(const std::string &nickname);
@@ -63,7 +62,10 @@ class	Clients
 		void	appendToBuffer(const std::string &data);
 		void	clearBuffer(void);
 
-		// Fonction Publiques
+		bool		messageComplete(void) const;
+		std::string	extractMessage(void);
+		void		eraseFromBuffer(size_t pos);
+
 		bool	isAuthenticated(void) const;
 		bool	isConnected(void) const;
 		void	disconnect(void);

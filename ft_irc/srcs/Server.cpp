@@ -6,7 +6,7 @@
 /*   By: pgrellie <pgrellie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:41:53 by pgrellie          #+#    #+#             */
-/*   Updated: 2025/09/19 17:57:29 by pgrellie         ###   ########.fr       */
+/*   Updated: 2025/10/01 18:50:39 by pgrellie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -211,17 +211,13 @@ void	Server::_handleClientMessage(int client_fd)
 		return;
 	}
 	client->appendToBuffer(std::string(buffer, bytes_received));
-	// Traiter les messages complets (séparés par \r\n)
-	std::string	&client_buffer = const_cast<std::string&>(client->getBuffer());
-	size_t pos;
-	while ((pos = client_buffer.find("\r\n")) != std::string::npos)
+	while (client->messageComplete() == false)
 	{
-		std::string message = client_buffer.substr(0, pos);
-		client_buffer.erase(0, pos + 2);
+		std::string	message = client->extractMessage();
 		if (!message.empty())
 		{
-			std::cout << "Received from client " << client_fd << ": " << message << std::endl;
-			_processMessage(*client, message);
+			std::cout << "Received from Client " << client->getNickname() << std::endl;
+			_processMessage(*client, message); 
 		}
 	}
 }

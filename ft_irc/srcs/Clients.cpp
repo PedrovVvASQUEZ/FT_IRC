@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Client.cpp                                         :+:      :+:    :+:   */
+/*   Clients.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pgrellie <pgrellie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:41:21 by pgrellie          #+#    #+#             */
-/*   Updated: 2025/09/17 18:41:22 by pgrellie         ###   ########.fr       */
+/*   Updated: 2025/10/01 18:45:28 by pgrellie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,6 +125,27 @@ void	Clients::clearBuffer(void)
 }
 
 //==================== Fonctions publics ===================//
+
+bool	Clients::messageComplete(void) const
+{
+	return (_buffer.find("\r\n") != std::string::npos);
+}
+
+std::string	Clients::extractMessage(void)
+{
+	size_t	pos = _buffer.find("\r\n");
+	if (pos == std::string::npos)
+		return ("");
+	std::string	message = _buffer.substr(0, pos);
+	_buffer.erase(0, pos + 2);
+	return (message);
+}
+
+void	Clients::eraseFromBuffer(size_t pos)
+{
+	if (pos <= _buffer.length())
+		_buffer.erase(0, pos);
+}
 
 bool	Clients::isAuthenticated(void) const
 {
