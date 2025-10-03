@@ -6,7 +6,7 @@
 /*   By: pgrellie <pgrellie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:41:21 by pgrellie          #+#    #+#             */
-/*   Updated: 2025/10/01 18:45:28 by pgrellie         ###   ########.fr       */
+/*   Updated: 2025/10/03 18:42:17 by pgrellie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,12 @@
 
 //==================== Contructors N Destructor ===================//
 
-Clients::Clients(void) : _cfd(-1), _cstate(DISCONNECTED)
+Clients::Clients(void) : _cfd(-1), _cstate(CONNECTED)
 {
 	return ;
 }
 
-Clients::Clients(int fd, const std::string &hostname) : _cfd(fd), _hostname(hostname), _cstate(DISCONNECTED)
+Clients::Clients(int fd, const std::string &hostname) : _cfd(fd), _hostname(hostname), _cstate(CONNECTED)
 {
 	return ;
 }
@@ -92,6 +92,11 @@ const std::string	&Clients::getBuffer(void) const
 	return (this->_buffer);
 }
 
+std::string	&Clients::getBuffer(void)
+{
+	return (this->_buffer);
+}
+
 //==================== Setters ===================//
 
 void	Clients::setNickname(const std::string &nickname)
@@ -154,7 +159,7 @@ bool	Clients::isAuthenticated(void) const
 
 bool	Clients::isConnected(void) const
 {
-	return (this->_cstate == CONNECTED);
+	return (this->_cstate == CONNECTED || this->_cstate == AUTHENTIFICATED);
 }
 
 void	Clients::disconnect(void)

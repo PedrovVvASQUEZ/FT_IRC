@@ -6,12 +6,14 @@
 /*   By: pgrellie <pgrellie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 17:17:45 by pgrellie          #+#    #+#             */
-/*   Updated: 2025/09/19 18:11:18 by pgrellie         ###   ########.fr       */
+/*   Updated: 2025/10/03 18:59:24 by pgrellie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include <signal.h>
+
+// Client de reference netcat
 
 Server	*g_server = NULL;
 

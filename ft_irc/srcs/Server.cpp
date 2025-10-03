@@ -6,7 +6,7 @@
 /*   By: pgrellie <pgrellie@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/17 18:41:53 by pgrellie          #+#    #+#             */
-/*   Updated: 2025/10/01 18:50:39 by pgrellie         ###   ########.fr       */
+/*   Updated: 2025/10/03 19:05:05 by pgrellie         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,8 @@ Server::Server(const Server &rhs) : _port(rhs._port), _password(rhs._password), 
 
 Server::~Server(void)
 {
-	stop();
+	if (_running)
+		stop();
 	std::cout << "Server destroyed" << std::endl;
 }
 
@@ -170,7 +171,7 @@ void	Server::_acceptNewClient()
 	new_client_pfd.events = POLLIN;
 	new_client_pfd.revents = 0;
 	this->_pfds.push_back(new_client_pfd);
-	std::cout << "New lient connected! FD: " << new_client_fd << "from" << hostname << std::endl;
+	std::cout << "New client connected! FD: " << new_client_fd << " from " << hostname << std::endl;
 	std::cout << "Actual clients: " << _clients.size() << std::endl;
 }
 
@@ -211,12 +212,12 @@ void	Server::_handleClientMessage(int client_fd)
 		return;
 	}
 	client->appendToBuffer(std::string(buffer, bytes_received));
-	while (client->messageComplete() == false)
+	while (client->messageComplete())
 	{
 		std::string	message = client->extractMessage();
 		if (!message.empty())
 		{
-			std::cout << "Received from Client " << client->getNickname() << std::endl;
+			std::cout << "Received from Client " << client->getNickname() << ": " << message << std::endl;
 			_processMessage(*client, message); 
 		}
 	}
@@ -288,7 +289,7 @@ void Server::run(void)
 	while (_running)
 	{
 
-		int poll_result = poll(_pfds.data(), _pfds.size(), -1);
+		int poll_result = poll(_pfds.data(), _pfds.size(), 1000);
 		
 		if (poll_result < 0)
 		{
